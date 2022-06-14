@@ -2,6 +2,7 @@ const inquirer = require("inquirer");
 const express = require("express");
 const mysql = require("mysql2");
 const cTable = require("console.table");
+const res = require("express/lib/response");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3001;
@@ -57,7 +58,7 @@ function start() {
               {
                 type: "list",
                 name: "department",
-                message: "WHich department would you like to see?",
+                message: "Which department would you like to see?",
                 choices: ["Sales", "Engineering", "Finance", "Legal"],
               },
             ])
@@ -91,7 +92,7 @@ function start() {
           start();
           break;
         case "Add Employee":
-          start();
+          addEmployee();
           break;
         case "Remove Employee":
           start();
@@ -105,8 +106,42 @@ function start() {
     });
 }
 
-start();
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message: "What is the employee's first name?",
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "What is the employee's last name?",
+      },
+      {
+        type: "list",
+        name: "roleId",
+        message: "What is the employee's role?",
+        choices: ["1", "Software Engineer", "Accountant", "Lawyer"],
+      },
+    ])
+    .then((userInput) => {
+      userFirst = userInput.first_name;
+      userLast = userInput.last_name;
+      userRole = userInput.roleId;
 
+      let sql = `INSERT INTO employee (first_name, last_name, role_id) VALUES ("${this.userFirst}", "${this.userLast}", "${this.userRole}");`;
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.table(result);
+        start();
+      });
+    });
+}
+start();
 // gets all of the departments
 app.get("/api/department", (req, res) => {
   db.query("SELECT * FROM departments", (err, result) => {

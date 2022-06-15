@@ -44,9 +44,11 @@ If you want to add an employee to a role, a question will ask which role you wou
 <img width="1016" alt="Screen Shot 2022-06-14 at 11 24 49 PM" src="https://user-images.githubusercontent.com/102837154/173730428-9e701771-6426-4703-bdba-462ef18447ab.png">
 
 ## Video
-
+Google Drive Link:
 https://drive.google.com/file/d/19dO4Rl8jd5gxK7h0ZAaayaeIp8KdM1OB/view
 
+MP4 Link:
+https://user-images.githubusercontent.com/102837154/173731458-8cd7f86c-bab7-40ab-a32c-6ff84835d899.mp4
 
 ## Credits 
 Thank you to third party websites like MDN and W3 for providing me with lots of information to complete this assignment. Thank you as well to MySQL and  Inquirer for providing the necessary functions to allow this application to work.

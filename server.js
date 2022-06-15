@@ -33,10 +33,10 @@ function start() {
           "View ALL Departments",
           "View ALL Roles",
           "Add Employee",
-          "Add Role",
-          "Remove Employee",
           "Add Department",
+          "Add Role",
           "Update Employee Role",
+          "Remove Employee",
           "Quit",
         ],
       },
@@ -58,14 +58,17 @@ function start() {
         case "Add Employee":
           addEmployee();
           break;
+        case "Add Department":
+          addDepartment();
+          break;
         case "Add Role":
           addRole();
           break;
+        case "Update Employee Role":
+          updateEmployeeRole();
+          break;
         case "Remove Employee":
           deleteEmployee();
-          break;
-        case "Update Employee Role":
-          start();
           break;
         default:
           start();
@@ -178,20 +181,19 @@ function addEmployee() {
     });
 }
 
-function deleteEmployee() {
+function addDepartment() {
   inquirer
     .prompt([
       {
-        type: "list",
-        name: "employeeId",
-        message: "What is the employee's id?",
-        choices: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        type: "input",
+        name: "department_name",
+        message: "What is the name of the department?",
       },
     ])
     .then((userInput) => {
-      userEmployeeId = userInput.employeeId;
+      userNewDepartment = userInput.department_name;
 
-      let sql = `DELETE FROM employee WHERE id = ${this.userEmployeeId};`;
+      let sql = `INSERT INTO departments (department_name) VALUES ("${this.userNewDepartment}");`;
       db.query(sql, (err, result) => {
         if (err) {
           console.log(err);
@@ -237,26 +239,94 @@ function addRole() {
       });
     });
 }
+
+function updateEmployeeRole() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "employeeId",
+        message: "What is the employee's id?",
+        choices: [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+        ],
+      },
+      {
+        type: "list",
+        name: "newRoleId",
+        message: "What role are you promoting them to?",
+        choices: ["1", "3", "5", "7"],
+      },
+    ])
+    .then((userInput) => {
+      userEmployeeId = userInput.employeeId;
+      userNewRole = userInput.newRoleId;
+
+      let sql = `UPDATE employee SET role_id = "${this.userNewRole}" WHERE id = ${this.userEmployeeId};`;
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.table(result);
+        start();
+      });
+    });
+}
+
+function deleteEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "employeeId",
+        message: "What is the employee's id?",
+        choices: [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+        ],
+      },
+    ])
+    .then((userInput) => {
+      userEmployeeId = userInput.employeeId;
+
+      let sql = `DELETE FROM employee WHERE id = ${this.userEmployeeId};`;
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.table(result);
+        start();
+      });
+    });
+}
+
 start();
-// gets all of the departments
-app.get("/api/department", (req, res) => {
-  db.query("SELECT * FROM departments", (err, result) => {
-    res.json(result);
-  });
-});
-
-// gets all of the roles
-app.get("/api/roles", (req, res) => {
-  db.query("SELECT * FROM roles", (err, result) => {
-    res.json(result);
-  });
-});
-
-//gets all of the employees
-app.get("/api/employee", (req, res) => {
-  db.query("SELECT * FROM employee", (err, result) => {
-    res.json(result);
-  });
-});
 
 app.listen(PORT, () => console.log(`Express server listening on port ${PORT}`));

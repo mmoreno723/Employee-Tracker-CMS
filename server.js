@@ -30,12 +30,13 @@ function start() {
         choices: [
           "View ALL Employees",
           "View ALL Employees By Department",
-          "View ALL Employees By Manager",
           "View ALL Departments",
+          "View ALL Roles",
           "Add Employee",
           "Add Role",
-          "Update Employee Role",
+          "Remove Employee",
           "Add Department",
+          "Update Employee Role",
           "Quit",
         ],
       },
@@ -43,59 +44,25 @@ function start() {
     .then((userInput) => {
       switch (userInput.list) {
         case "View ALL Employees":
-          let sql = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, departments.department_name, roles.salary, CONCAT(manager.first_name , ' ' , manager.last_name) as "manager" FROM departments JOIN roles ON departments.id = roles.department_id JOIN employee ON roles.id = employee.role_id LEFT JOIN employee manager ON employee.manager_id = manager.id ORDER BY employee.id ASC;`;
-          db.query(sql, (err, result) => {
-            if (err) {
-              console.log(err);
-            }
-            console.table(result);
-            start();
-          });
+          viewAllEmployees();
           break;
         case "View ALL Employees By Department":
-          inquirer
-            .prompt([
-              {
-                type: "list",
-                name: "department",
-                message: "Which department would you like to see?",
-                choices: ["Sales", "Engineering", "Finance", "Legal"],
-              },
-            ])
-            .then((userInput) => {
-              let depId;
-              switch (userInput.department) {
-                case "Sales":
-                  depId = 1;
-                  break;
-                case "Engineering":
-                  depId = 2;
-                  break;
-                case "Finance":
-                  depId = 3;
-                  break;
-                case "Legal":
-                  depId = 4;
-                  break;
-              }
-              let sql = `SELECT employee.id, employee.first_name, employee.last_name, roles.title FROM roles JOIN employee ON roles.id = employee.role_id && roles.department_id =?;`;
-              db.query(sql, depId, (err, result) => {
-                if (err) {
-                  console.log(err);
-                }
-                console.table(result);
-                start();
-              });
-            });
+          viewAllEmployeesByDept();
           break;
-        case "View ALL Employees By Manager":
-          start();
+        case "View ALL Departments":
+          viewAllDepartments();
+          break;
+        case "View ALL Roles":
+          viewRoles();
           break;
         case "Add Employee":
           addEmployee();
           break;
+        case "Add Role":
+          addRole();
+          break;
         case "Remove Employee":
-          start();
+          deleteEmployee();
           break;
         case "Update Employee Role":
           start();
@@ -104,6 +71,75 @@ function start() {
           start();
       }
     });
+}
+function viewAllEmployees() {
+  let sql = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, departments.department_name, roles.salary, CONCAT(manager.first_name , ' ' , manager.last_name) as "manager" FROM departments JOIN roles ON departments.id = roles.department_id JOIN employee ON roles.id = employee.role_id LEFT JOIN employee manager ON employee.manager_id = manager.id ORDER BY employee.id ASC;`;
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    console.table(result);
+    start();
+  });
+}
+
+function viewAllEmployeesByDept() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "department",
+        message: "Which department would you like to see?",
+        choices: ["Sales", "Engineering", "Finance", "Legal"],
+      },
+    ])
+    .then((userInput) => {
+      let depId;
+      switch (userInput.department) {
+        case "Sales":
+          depId = 1;
+          break;
+        case "Engineering":
+          depId = 2;
+          break;
+        case "Finance":
+          depId = 3;
+          break;
+        case "Legal":
+          depId = 4;
+          break;
+      }
+      let sql = `SELECT employee.id, employee.first_name, employee.last_name, roles.title FROM roles JOIN employee ON roles.id = employee.role_id && roles.department_id =?;`;
+      db.query(sql, depId, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.table(result);
+        start();
+      });
+    });
+}
+
+function viewAllDepartments() {
+  let sql = `SELECT * FROM departments;`;
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    console.table(result);
+    start();
+  });
+}
+
+function viewRoles() {
+  let sql = `SELECT * FROM roles;`;
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    console.table(result);
+    start();
+  });
 }
 
 function addEmployee() {
@@ -123,7 +159,7 @@ function addEmployee() {
         type: "list",
         name: "roleId",
         message: "What is the employee's role?",
-        choices: ["1", "Software Engineer", "Accountant", "Lawyer"],
+        choices: ["1", "2", "3", "4"],
       },
     ])
     .then((userInput) => {
@@ -132,6 +168,66 @@ function addEmployee() {
       userRole = userInput.roleId;
 
       let sql = `INSERT INTO employee (first_name, last_name, role_id) VALUES ("${this.userFirst}", "${this.userLast}", "${this.userRole}");`;
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.table(result);
+        start();
+      });
+    });
+}
+
+function deleteEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "employeeId",
+        message: "What is the employee's id?",
+        choices: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ])
+    .then((userInput) => {
+      userEmployeeId = userInput.employeeId;
+
+      let sql = `DELETE FROM employee WHERE id = ${this.userEmployeeId};`;
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.table(result);
+        start();
+      });
+    });
+}
+
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "What is the name of the role?",
+      },
+      {
+        type: "list",
+        name: "department",
+        message: "Which department does it belong to?",
+        choices: ["1", "2", "3", "4"],
+      },
+      {
+        type: "number",
+        name: "salary",
+        message: "What is the salary of the role?",
+      },
+    ])
+    .then((userInput) => {
+      userRoleTitle = userInput.title;
+      userRoleDepartment = userInput.department;
+      userRoleSalary = userInput.salary;
+
+      let sql = `INSERT INTO roles (title, department_id, salary) VALUES ("${this.userRoleTitle}", "${this.userRoleDepartment}", "${this.userRoleSalary}");`;
       db.query(sql, (err, result) => {
         if (err) {
           console.log(err);

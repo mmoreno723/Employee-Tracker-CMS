@@ -45,6 +45,8 @@ If you want to add an employee to a role, a question will ask which role you wou
 
 ## Video
 
+https://drive.google.com/file/d/19dO4Rl8jd5gxK7h0ZAaayaeIp8KdM1OB/view
+
 
 ## Credits 
 Thank you to third party websites like MDN and W3 for providing me with lots of information to complete this assignment. Thank you as well to MySQL and  Inquirer for providing the necessary functions to allow this application to work.

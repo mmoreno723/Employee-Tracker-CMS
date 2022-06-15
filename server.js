@@ -37,6 +37,7 @@ function start() {
           "Add Role",
           "Update Employee Role",
           "Remove Employee",
+          "Remove Department",
           "Quit",
         ],
       },
@@ -69,6 +70,9 @@ function start() {
           break;
         case "Remove Employee":
           deleteEmployee();
+          break;
+        case "Remove Department":
+          deleteDepartment();
           break;
         default:
           start();
@@ -317,6 +321,30 @@ function deleteEmployee() {
       userEmployeeId = userInput.employeeId;
 
       let sql = `DELETE FROM employee WHERE id = ${this.userEmployeeId};`;
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        console.table(result);
+        start();
+      });
+    });
+}
+
+function deleteDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "deleteDept",
+        message: "What is the id of the department you wish to delete?",
+        choices: ["1", "2", "3", "4", "5", "6"],
+      },
+    ])
+    .then((userInput) => {
+      userDeletedDept = userInput.deleteDept;
+
+      let sql = `DELETE FROM departments WHERE id = ${this.userDeletedDept};`;
       db.query(sql, (err, result) => {
         if (err) {
           console.log(err);

@@ -1,7 +1,7 @@
 # Employee-Tracker-CMS
 
 ## Description
-This application is designed to be an employee tracker content management system(CRM). The application is designed to run within the user's terminal using the Node JavaScript. Once initialized the user will be given a set of questions that asks them whether they want to view and add employees, departments, and roles. Other functions include deleting employes, departments, and roles. The information will be dynamically updated on the user's terminal, and the user has the option to view any information they have updated at any time. I was inspired to build this project to give business owners the ability to view and manage the departments, roles, and employees of their company so they can organize and plan their business. This CMS application utilizes MySQL, Express.JS and Node.JS. 
+This application is designed to be an employee tracker content management system(CMS). The application is designed to run within the user's terminal using the Node JavaScript. Once initialized the user will be given a set of questions that asks them whether they want to view and add employees, departments, and roles. Other functions include deleting employes, departments, and roles. The information will be dynamically updated on the user's terminal, and the user has the option to view any information they have updated at any time. I was inspired to build this project to give business owners the ability to view and manage the departments, roles, and employees of their company so they can organize and plan their business. This CMS application utilizes MySQL, Express.JS and Node.JS. 
 
 ## Installation
 
